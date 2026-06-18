@@ -1,6 +1,5 @@
 package com.B2dev.usuario.business.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
