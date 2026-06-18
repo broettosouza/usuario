@@ -4,6 +4,7 @@ import com.B2dev.usuario.business.converter.UsuarioConverter;
 import com.B2dev.usuario.business.dto.UsuarioDTO;
 import com.B2dev.usuario.infrastructure.entity.Usuario;
 import com.B2dev.usuario.infrastructure.exceptions.ConflictException;
+import com.B2dev.usuario.infrastructure.exceptions.ResourceNotFoundException;
 import com.B2dev.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,6 +48,13 @@ public UsuarioDTO salvaUsuario (UsuarioDTO usuarioDTO){
     public boolean verificaEmailExistente(String email) {
         return usuarioRepository.existsByEmail(email);
 
+    }
+    public Usuario buscarUsuarioPoremail(String email ){
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("Email não encontrado" + email));
+    }
+    public void deleteUsuaioPorEmail(String email){
+        usuarioRepository.deleteByEmail(email);
     }
 
 
