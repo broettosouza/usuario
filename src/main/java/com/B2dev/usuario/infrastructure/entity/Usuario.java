@@ -20,7 +20,8 @@ import java.util.List;
 
 public class Usuario  implements UserDetails {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
@@ -53,5 +54,9 @@ public class Usuario  implements UserDetails {
 
     public List<Endereco> getEndereco() {
         return enderecos;
+    }
+
+    public List<Telefone> getTelefones() {
+        return telefone;
     }
 }

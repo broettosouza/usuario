@@ -1,6 +1,5 @@
 package com.B2dev.usuario.business.converter;
 
-
 import com.B2dev.usuario.business.dto.EnderecoDTO;
 import com.B2dev.usuario.business.dto.TelefoneDTO;
 import com.B2dev.usuario.business.dto.UsuarioDTO;
@@ -9,66 +8,35 @@ import com.B2dev.usuario.infrastructure.entity.Telefone;
 import com.B2dev.usuario.infrastructure.entity.Usuario;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UsuarioConverter {
 
+    public Usuario paraUsuario(UsuarioDTO usuarioDTO) {
+        if (usuarioDTO == null) return null;
 
-   public Usuario paraUsuario(UsuarioDTO usuarioDTO){
-       return Usuario.builder()
-               .nome(usuarioDTO.getNome())
-               .email(usuarioDTO.getEmail())
-               .senha(usuarioDTO.getSenha())
-               .enderecos(paraListaEndereco(usuarioDTO.getEndereco()))
-               .telefone(paraListaTelefone(usuarioDTO.getTelefones()))
-               .build();
-
-
-   }
-
-public List<Endereco> paraListaEndereco (List<EnderecoDTO> enderecoDTOS){
-return enderecoDTOS.stream().map(this::paraEndereco).toList();
-}
-public Endereco paraEndereco (EnderecoDTO enderecoDTO){
-       return Endereco.builder()
-               .rua(enderecoDTO.getRua())
-               .numero(enderecoDTO.getNumero())
-               .complemento(enderecoDTO.getComplemento())
-               .cidade(enderecoDTO.getCidade())
-               .estado(enderecoDTO.getEstado())
-               .cep(enderecoDTO.getCep())
-               .build();
-          }
-
-          public List<Telefone> paraListaTelefone(List<TelefoneDTO> telefoneDTOS){
-             return telefoneDTOS.stream().map(this::paraTelefone).toList();
-          }
-
-          public  Telefone paraTelefone (TelefoneDTO telefoneDTO){
-       return Telefone.builder()
-               .numero(telefoneDTO.getNumero())
-               .ddd(telefoneDTO.getDdd())
-               .build();
-          }
-
-    public UsuarioDTO paraUsuarioDTO (Usuario usuarioDTO){
-        return UsuarioDTO.builder()
+        return Usuario.builder()
                 .nome(usuarioDTO.getNome())
                 .email(usuarioDTO.getEmail())
                 .senha(usuarioDTO.getSenha())
-                .endereco(paraListaEnderecoDTO(usuarioDTO.getEndereco()))
-                .telefones(paraListaTelefoneDTO(usuarioDTO.getTelefones()))
+                .enderecos(paraListaEndereco(usuarioDTO.getEndereco())) // Fique atento se no DTO é getEndereco ou getEnderecos
+                .telefone(paraListaTelefone(usuarioDTO.getTelefones()))
                 .build();
-
-
     }
 
-    public List<EnderecoDTO> paraListaEnderecoDTO(List<Endereco> enderecoDTOS){
-        return enderecoDTOS.stream().map(this::paraEnderecoDTO).toList();
+    public List<Endereco> paraListaEndereco(List<EnderecoDTO> enderecoDTOS) {
+        if (enderecoDTOS == null) {
+            return new ArrayList<>(); // Evita o NullPointerException se o campo vier nulo
+        }
+        return enderecoDTOS.stream().map(this::paraEndereco).toList();
     }
-    public EnderecoDTO paraEnderecoDTO (Endereco enderecoDTO){
-        return EnderecoDTO.builder()
+
+    public Endereco paraEndereco(EnderecoDTO enderecoDTO) {
+        if (enderecoDTO == null) return null;
+
+        return Endereco.builder()
                 .rua(enderecoDTO.getRua())
                 .numero(enderecoDTO.getNumero())
                 .complemento(enderecoDTO.getComplemento())
@@ -78,15 +46,67 @@ public Endereco paraEndereco (EnderecoDTO enderecoDTO){
                 .build();
     }
 
-    public List<TelefoneDTO> paraListaTelefoneDTO(List<Telefone> telefoneDTOS){
-        return telefoneDTOS.stream().map(this::paraTelefoneDTO).toList();
+    public List<Telefone> paraListaTelefone(List<TelefoneDTO> telefoneDTOS) {
+        if (telefoneDTOS == null) {
+            return new ArrayList<>(); // Proteção contra NullPointer
+        }
+        return telefoneDTOS.stream().map(this::paraTelefone).toList();
     }
 
-    public  TelefoneDTO paraTelefoneDTO (Telefone telefoneDTO){
-        return TelefoneDTO.builder()
+    public Telefone paraTelefone(TelefoneDTO telefoneDTO) {
+        if (telefoneDTO == null) return null;
+
+        return Telefone.builder()
                 .numero(telefoneDTO.getNumero())
                 .ddd(telefoneDTO.getDdd())
                 .build();
     }
-}
 
+    public UsuarioDTO paraUsuarioDTO(Usuario usuario) {
+        if (usuario == null) return null;
+
+        return UsuarioDTO.builder()
+                .nome(usuario.getNome())
+                .email(usuario.getEmail())
+                .senha(usuario.getSenha())
+                .endereco(paraListaEnderecoDTO(usuario.getEnderecos())) // Ajustado o getter da entidade (plural)
+                .telefones(paraListaTelefoneDTO(usuario.getTelefones())) // Ajustado o getter da entidade (plural)
+                .build();
+    }
+
+    public List<EnderecoDTO> paraListaEnderecoDTO(List<Endereco> enderecos) {
+        if (enderecos == null) {
+            return new ArrayList<>();
+        }
+        return enderecos.stream().map(this::paraEnderecoDTO).toList();
+    }
+
+    public EnderecoDTO paraEnderecoDTO(Endereco endereco) {
+        if (endereco == null) return null;
+
+        return EnderecoDTO.builder()
+                .rua(endereco.getRua())
+                .numero(endereco.getNumero())
+                .complemento(endereco.getComplemento())
+                .cidade(endereco.getCidade())
+                .estado(endereco.getEstado())
+                .cep(endereco.getCep())
+                .build();
+    }
+
+    public List<TelefoneDTO> paraListaTelefoneDTO(List<Telefone> telefones) {
+        if (telefones == null) {
+            return new ArrayList<>();
+        }
+        return telefones.stream().map(this::paraTelefoneDTO).toList();
+    }
+
+    public TelefoneDTO paraTelefoneDTO(Telefone telefone) {
+        if (telefone == null) return null;
+
+        return TelefoneDTO.builder()
+                .numero(telefone.getNumero())
+                .ddd(telefone.getDdd())
+                .build();
+    }
+}

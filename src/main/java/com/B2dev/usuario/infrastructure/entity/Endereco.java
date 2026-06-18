@@ -13,6 +13,10 @@ import lombok.*;
 
 public class Endereco {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String rua;
     private Long numero;
     private String complemento;

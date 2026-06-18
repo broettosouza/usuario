@@ -7,6 +7,7 @@ import com.B2dev.usuario.infrastructure.exceptions.ConflictException;
 import com.B2dev.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,9 +16,11 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioConverter usuarioConverter;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
 public UsuarioDTO salvaUsuario (UsuarioDTO usuarioDTO){
+    emailExiste(usuarioDTO.getEmail());
+    usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
     Usuario usuario = usuarioConverter.paraUsuario(usuarioDTO);
     usuario = usuarioRepository.save(usuario);
     return usuarioConverter.paraUsuarioDTO(usuario);
