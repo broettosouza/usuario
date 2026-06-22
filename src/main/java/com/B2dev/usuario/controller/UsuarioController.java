@@ -1,9 +1,9 @@
 package com.B2dev.usuario.controller;
 
 import com.B2dev.usuario.business.UsuarioService;
+import com.B2dev.usuario.business.dto.EnderecoDTO;
+import com.B2dev.usuario.business.dto.TelefoneDTO;
 import com.B2dev.usuario.business.dto.UsuarioDTO;
-import com.B2dev.usuario.infrastructure.entity.Usuario;
-import com.B2dev.usuario.infrastructure.security.JwtRequestFilter;
 import com.B2dev.usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<Usuario> buscaUsuarioPorEmail(@RequestParam("email") String email) {
+    public ResponseEntity<UsuarioDTO> buscaUsuarioPorEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(usuarioService.buscarUsuarioPoremail(email));
     }
 
@@ -55,5 +55,16 @@ public class UsuarioController {
          return ResponseEntity.ok(usuarioService.atualizacaoDadosUsuario(token, dto));
      }
 
+@PutMapping("/endereco")
+    public  ResponseEntity<EnderecoDTO> atualizaEndereco ( @RequestBody EnderecoDTO dto,
+                                                           @RequestHeader("id") Long id ){
+return ResponseEntity.ok(usuarioService.atualizaEndereco(id, dto));
+    }
 
+
+    @PutMapping("/telefone")
+    public ResponseEntity<TelefoneDTO> atualizaTelefone ( @RequestBody TelefoneDTO dto,
+                                                          @RequestHeader("id")Long id){
+        return ResponseEntity.ok(usuarioService.atualizaTelefone(id, dto));
+    }
 }
