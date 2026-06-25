@@ -4,6 +4,7 @@ import com.B2dev.usuario.business.UsuarioService;
 import com.B2dev.usuario.business.dto.EnderecoDTO;
 import com.B2dev.usuario.business.dto.TelefoneDTO;
 import com.B2dev.usuario.business.dto.UsuarioDTO;
+import com.B2dev.usuario.infrastructure.entity.Endereco;
 import com.B2dev.usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
      @PutMapping
-    public ResponseEntity<UsuarioDTO> atualizDadoUsuario(@RequestBody UsuarioDTO dto ,
+    public ResponseEntity<UsuarioDTO> atualizaDadoUsuario(@RequestBody UsuarioDTO dto ,
                                                          @RequestHeader("authorization")String token){
          return ResponseEntity.ok(usuarioService.atualizacaoDadosUsuario(token, dto));
      }
@@ -66,5 +67,17 @@ return ResponseEntity.ok(usuarioService.atualizaEndereco(id, dto));
     public ResponseEntity<TelefoneDTO> atualizaTelefone ( @RequestBody TelefoneDTO dto,
                                                           @RequestHeader("id")Long id){
         return ResponseEntity.ok(usuarioService.atualizaTelefone(id, dto));
+    }
+
+    @PostMapping ( "/endereco")
+    public ResponseEntity<EnderecoDTO> cadastraEndereco ( @RequestBody EnderecoDTO dto,
+                                                          @RequestHeader ("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.cadastroEndereco(token, dto));
+
+    }
+    @PostMapping("/telefone")
+    public ResponseEntity<TelefoneDTO>  cadastraTelefone ( @RequestBody TelefoneDTO dto,
+                                                          @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.cadastroTelefone(token,  dto));
     }
 }
